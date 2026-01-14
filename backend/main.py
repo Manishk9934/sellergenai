@@ -19,12 +19,16 @@ from fastapi.responses import FileResponse
 
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
-SMTP_EMAIL = ""
-SMTP_PASSWORD = ""
+SMTP_EMAIL = os.getenv("SMTP_EMAIL")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
+
+
+
+
 
 # ================= RAZORPAY CONFIG =================
-RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID", "rzp_test_xxxxx")
-RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET", "xxxxxxxx")
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
 
 
 
@@ -34,7 +38,8 @@ razorpay_client = razorpay.Client(
 )
 
 # ================= JWT CONFIG =================
-SECRET_KEY = "SELLERGEN_AI_SECRET_2026"
+SECRET_KEY = os.getenv("SECRET_KEY", "SELLERGEN_AI_SECRET_2026")
+
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
