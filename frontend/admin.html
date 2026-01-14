@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SellerGen AI – Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex">
+
+<!-- Sidebar -->
+<aside class="w-64 bg-slate-900 text-gray-200 flex flex-col">
+  <div class="p-5 text-xl font-bold text-emerald-400 border-b border-slate-700">
+    SellerGen AI
+  </div>
+
+  <nav class="flex-1 p-4 space-y-2">
+    <a href="admin.html" data-page="dashboard"
+       class="menu-item block px-4 py-2 rounded-lg">📊 Dashboard</a>
+    <a href="/users" data-page="users"
+       class="menu-item block px-4 py-2 rounded-lg">👥 Users</a>
+    <a href="payments.html" data-page="payments"
+       class="menu-item block px-4 py-2 rounded-lg">💳 Payments</a>
+    <a href="analytics.html" data-page="analytics"
+       class="menu-item block px-4 py-2 rounded-lg">📈 Analytics</a>
+  </nav>
+
+  <div class="p-4 border-t border-slate-700">
+    <button onclick="logout()"
+      class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg">
+      Logout
+    </button>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="flex-1">
+
+  <!-- Topbar -->
+  <div class="bg-white shadow-sm p-4 flex justify-between items-center">
+    <h1 class="text-xl font-semibold">Admin Dashboard</h1>
+    <span class="bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full text-sm">
+      Admin
+    </span>
+  </div>
+
+  <div class="p-6 space-y-8">
+
+    <!-- Stats Cards -->
+    
+     <!-- Stats Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+  <!-- Total Users -->
+  <div class="bg-white p-5 rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-1 
+              transition-all duration-300 relative overflow-hidden">
+    <div class="absolute -top-6 -right-6 w-24 h-24 bg-emerald-400/30 rounded-full blur-2xl"></div>
+    <div class="relative flex justify-between items-start">
+      <div>
+        <p class="text-sm text-gray-500">Total Users</p>
+        <h2 id="totalUsers" class="text-3xl font-bold text-slate-800">0</h2>
+      </div>
+      <div class="w-10 h-10 flex items-center justify-center 
+                  bg-emerald-100 text-emerald-600 rounded-lg text-xl shadow">
+        👥
+      </div>
+    </div>
+  </div>
+
+  <!-- Free Users -->
+  <div class="bg-white p-5 rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-1 
+              transition-all duration-300 relative overflow-hidden">
+    <div class="absolute -top-6 -right-6 w-24 h-24 bg-slate-400/30 rounded-full blur-2xl"></div>
+    <div class="relative flex justify-between items-start">
+      <div>
+        <p class="text-sm text-gray-500">Free Users</p>
+        <h2 id="freeUsers" class="text-3xl font-bold text-slate-800">0</h2>
+      </div>
+      <div class="w-10 h-10 flex items-center justify-center 
+                  bg-slate-100 text-slate-600 rounded-lg text-xl shadow">
+        🆓
+      </div>
+    </div>
+  </div>
+
+  <!-- Pro Users -->
+  <div class="bg-white p-5 rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-1 
+              transition-all duration-300 relative overflow-hidden">
+    <div class="absolute -top-6 -right-6 w-24 h-24 bg-indigo-400/30 rounded-full blur-2xl"></div>
+    <div class="relative flex justify-between items-start">
+      <div>
+        <p class="text-sm text-gray-500">Pro Users</p>
+        <h2 id="proUsers" class="text-3xl font-bold text-slate-800">0</h2>
+      </div>
+      <div class="w-10 h-10 flex items-center justify-center 
+                  bg-indigo-100 text-indigo-600 rounded-lg text-xl shadow">
+        ⭐
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Today -->
+  <div class="bg-white p-5 rounded-xl shadow-md hover:shadow-2xl hover:-translate-y-1 
+              transition-all duration-300 relative overflow-hidden">
+    <div class="absolute -top-6 -right-6 w-24 h-24 bg-rose-400/30 rounded-full blur-2xl"></div>
+    <div class="relative flex justify-between items-start">
+      <div>
+        <p class="text-sm text-gray-500">Active Today</p>
+        <h2 id="activeToday" class="text-3xl font-bold text-slate-800">0</h2>
+      </div>
+      <div class="w-10 h-10 flex items-center justify-center 
+                  bg-rose-100 text-rose-600 rounded-lg text-xl shadow">
+        ⚡
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+    <!-- Charts -->
+   <!-- Charts -->
+     <!-- Charts -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+
+  <!-- Plan Distribution -->
+  <div class="bg-white rounded-2xl shadow-md p-5 flex flex-col">
+    <h3 class="font-semibold text-slate-700 mb-3">Plan Distribution</h3>
+    <div class="flex items-center justify-center h-[260px]">
+      <canvas id="planChart" class="max-w-[220px] max-h-[220px]"></canvas>
+    </div>
+  </div>
+
+  <!-- Active Users -->
+  <div class="bg-white rounded-2xl shadow-md p-5">
+    <h3 class="font-semibold text-slate-700 mb-3">Active Users Today</h3>
+    <div class="h-[260px]">
+      <canvas id="activeChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+
+
+  </div>
+</main>
+
+<script>
+function animateValue(id, start, end, duration = 1200) {
+  const obj = document.getElementById(id);
+  let startTimestamp = null;
+
+  function step(timestamp) {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    obj.innerText = Math.floor(progress * (end - start) + start);
+
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
+  }
+  window.requestAnimationFrame(step);
+}
+
+
+/* -------- Sidebar Active State -------- */
+const activeMenu = "dashboard";
+document.querySelectorAll(".menu-item").forEach(item => {
+  item.classList.add(
+    "text-gray-300",
+    "hover:bg-slate-800",
+    "hover:text-emerald-400",
+    "duration-200"
+  );
+
+  if (item.dataset.page === activeMenu) {
+    item.classList.add("bg-slate-800", "text-emerald-400", "font-semibold");
+  }
+});
+
+/* -------- Auth -------- */
+const token = localStorage.getItem("token");
+if (!token) {
+  window.location.href = "/login";
+}
+
+/* -------- Logout -------- */
+function logout() {
+  localStorage.removeItem("token");
+  window.location.href = "/login";
+}
+
+/* -------- Load Stats -------- */
+async function loadStats() {
+  const res = await fetch("/admin/stats", {
+    headers: { Authorization: "Bearer " + token }
+  });
+  const data = await res.json();
+
+  totalUsers.innerText  = data.total_users;
+  freeUsers.innerText   = data.free_users;
+  proUsers.innerText    = data.pro_users;
+  activeToday.innerText = data.active_today;
+
+  animateValue("totalUsers", 0, data.total_users);
+  animateValue("freeUsers", 0, data.free_users);
+  animateValue("proUsers", 0, data.pro_users);
+  animateValue("activeToday", 0, data.active_today);
+}
+
+/* -------- Load Charts -------- */
+async function loadCharts() {
+  const res = await fetch("/admin/chart-data", {
+    headers: { Authorization: "Bearer " + token }
+  });
+  const data = await res.json();
+
+  // Destroy old charts if reloaded
+  if (window.planChartObj) window.planChartObj.destroy();
+  if (window.activeChartObj) window.activeChartObj.destroy();
+
+  window.planChartObj = new Chart(document.getElementById("planChart"), {
+    type: "doughnut",
+    data: {
+      labels: ["Free Users", "Pro Users"],
+      datasets: [{
+        data: [data.free, data.pro],
+        backgroundColor: ["#94a3b8", "#22c55e"],
+        borderWidth: 4,
+        borderColor: "#fff"
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: "70%",
+      plugins: {
+        legend: {
+          position: "bottom",
+          labels: {
+            usePointStyle: true,
+            padding: 15
+          }
+        }
+      }
+    }
+  });
+
+  window.activeChartObj = new Chart(document.getElementById("activeChart"), {
+    type: "bar",
+    data: {
+      labels: ["Active Today"],
+      datasets: [{
+        data: [data.active_today || 0],
+        backgroundColor: "#38bdf8",
+        borderRadius: 12,
+        barThickness: 60
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1 }
+        }
+      },
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+}
+
+/* -------- Init -------- */
+loadStats();
+loadCharts();
+</script>
+
+</body>
+</html>

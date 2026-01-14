@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <title>SellerGen AI – Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    }
+  </script>
+</head>
+
+<body class="bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-all">
+
+<!-- Navbar -->
+<nav class="bg-white dark:bg-slate-800 shadow">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold text-indigo-600">SellerGen AI</h1>
+
+    <div class="flex items-center gap-4">
+      <span id="planBadge"
+        class="px-3 py-1 rounded-full text-xs bg-slate-200 dark:bg-slate-700">
+        FREE
+      </span>
+
+      <button onclick="toggleDark()"
+        class="bg-slate-200 dark:bg-slate-700 px-3 py-1 rounded-lg">
+        🌙
+      </button>
+
+      <button onclick="logout()"
+        class="bg-red-500 text-white px-3 py-1 rounded-lg">
+        Logout
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Usage + History -->
+<div class="max-w-7xl mx-auto px-6 py-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+  <!-- Usage -->
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow p-6">
+    <h2 class="font-bold mb-2">📊 Today Usage</h2>
+    <p id="usageText" class="text-sm mb-2">Loading...</p>
+    <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3">
+      <div id="usageBar" class="h-3 rounded-full bg-indigo-500 w-0"></div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow p-6">
+    <h2 class="font-bold mb-2">🕒 History Logs</h2>
+    <div id="historyList" class="max-h-52 overflow-y-auto text-sm"></div>
+  </div>
+</div>
+
+<!-- Generators -->
+<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+  <!-- Listing Generator -->
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow p-6">
+    <h2 class="font-bold mb-3">📦 Listing Generator</h2>
+
+    <select id="template" class="w-full mb-2 p-2 border rounded dark:bg-slate-700">
+      <option value="">Select Template</option>
+      <option value="amazon">Amazon</option>
+      <option value="flipkart">Flipkart</option>
+      <option value="meesho">Meesho</option>
+      <option value="seo">SEO</option>
+    </select>
+
+    <input id="name" placeholder="Product Name" class="w-full mb-2 p-2 border rounded dark:bg-slate-700">
+    <input id="category" placeholder="Category" class="w-full mb-2 p-2 border rounded dark:bg-slate-700">
+    <textarea id="features" placeholder="Features" class="w-full mb-2 p-2 border rounded dark:bg-slate-700"></textarea>
+
+    <div class="flex gap-2">
+      <button onclick="generateListing()"
+        class="flex-1 bg-indigo-600 text-white py-2 rounded">
+        Generate
+      </button>
+      <button onclick="copyToClipboard()" class="bg-slate-300 dark:bg-slate-600 px-4 rounded">📋</button>
+      <button onclick="downloadTXT()" class="bg-slate-300 dark:bg-slate-600 px-4 rounded">⬇</button>
+    </div>
+
+    <pre id="listingOutput"
+      class="bg-black text-green-400 p-4 rounded mt-3 text-sm min-h-[120px]"></pre>
+  </div>
+
+  <!-- Keyword Generator -->
+  <div class="bg-white dark:bg-slate-800 rounded-xl shadow p-6">
+    <h2 class="font-bold mb-3">🔍 Keyword Generator</h2>
+    <input id="product" placeholder="Product Name"
+      class="w-full mb-2 p-2 border rounded dark:bg-slate-700">
+
+    <button onclick="generateKeywords()"
+      class="w-full bg-indigo-600 text-white py-2 rounded">
+      Generate Keywords
+    </button>
+
+    <pre id="keywordOutput"
+      class="bg-black text-green-400 p-4 rounded mt-3 text-sm min-h-[120px]"></pre>
+  </div>
+
+</div>
+
+<script>
+const token = localStorage.getItem("token");
+if (!token) location.href = "/login";
+
+/* Dark Mode */
+function toggleDark() {
+  document.documentElement.classList.toggle("dark");
+}
+
+/* Logout */
+function logout() {
+  localStorage.clear();
+  location.href = "/login";
+}
+
+/* Copy + Download */
+function copyToClipboard() {
+  navigator.clipboard.writeText(listingOutput.innerText);
+  alert("Copied!");
+}
+function downloadTXT() {
+  const blob = new Blob([listingOutput.innerText], { type: "text/plain" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "listing.txt";
+  a.click();
+}
+
+/* Usage */
+function loadUsage() {
+  fetch("/usage", { headers: { Authorization: "Bearer " + token } })
+    .then(r => r.json())
+    .then(d => {
+      if (d.plan === "pro") {
+        usageText.innerText = "Pro Plan – Unlimited";
+        usageBar.style.width = "100%";
+        usageBar.className = "h-3 rounded-full bg-green-500";
+        planBadge.innerText = "PRO";
+        planBadge.className = "px-3 py-1 rounded-full text-xs bg-green-500 text-black";
+      } else {
+        const percent = (d.used / d.limit) * 100;
+        usageText.innerText = `Used ${d.used} of ${d.limit}`;
+        usageBar.style.width = percent + "%";
+        planBadge.innerText = "FREE";
+      }
+    });
+}
+
+/* History */
+function loadHistory() {
+  fetch("/history", { headers: { Authorization: "Bearer " + token } })
+    .then(r => r.json())
+    .then(data => {
+      historyList.innerHTML = "";
+      data.forEach(i => {
+        const div = document.createElement("div");
+        div.className = "border-b py-2";
+        div.innerHTML = `
+          <b>${i.action.toUpperCase()}</b><br>
+          <small>${i.input}</small><br>
+          <span class="text-xs text-gray-400">${i.time}</span>
+        `;
+        historyList.appendChild(div);
+      });
+    });
+}
+
+/* Generate Listing */
+function generateListing() {
+  const data = {
+    product_name: name.value,
+    category: category.value,
+    features: features.value,
+    template: template.value,
+    language: "English"
+  };
+
+  fetch("/generate-listing", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify(data)
+  })
+  .then(r => r.json())
+  .then(d => {
+    listingOutput.innerText = d.output || d.detail;
+    loadUsage();
+    loadHistory();
+  });
+}
+
+/* Generate Keywords */
+function generateKeywords() {
+  fetch("/generate-keywords", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + token
+    },
+    body: JSON.stringify({ product: product.value })
+  })
+  .then(r => r.json())
+  .then(d => {
+    keywordOutput.innerText = d.output || d.detail;
+    loadUsage();
+    loadHistory();
+  });
+}
+
+/* Init */
+loadUsage();
+loadHistory();
+</script>
+
+</body>
+</html>

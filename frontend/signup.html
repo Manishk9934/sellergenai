@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SellerGen AI – Signup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen">
+
+<div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+  <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">SellerGen AI</h2>
+  <p class="text-center text-slate-500 mb-6">Create your free account</p>
+
+  <input id="email" type="email" placeholder="Email"
+    class="w-full p-2 mb-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+  <input id="password" type="password" placeholder="Password"
+    class="w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+  <button onclick="signupUser()"
+    class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+    Sign Up
+  </button>
+
+  <p class="text-center text-sm text-slate-500 mt-4">
+    Already have an account?
+    <a href="/login" class="text-blue-600 font-semibold">Login</a>
+  </p>
+</div>
+
+<script>
+async function signupUser() {
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  // Empty validation
+  if(email === "" || password === ""){
+    alert("All fields are required");
+    return;
+  }
+
+  // Email format validation
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    alert("Invalid email format");
+    return;
+  }
+
+  // Password length validation
+  if(password.length < 6){
+    alert("Password must be minimum 6 characters");
+    return;
+  }
+
+  const data = {
+    email: email,
+    password: password
+  };
+
+  try{
+    const res = await fetch("/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      alert(result.detail || "Signup failed");
+      return;
+    }
+
+    alert("Signup successful! Please login.");
+    window.location.href = "/login";
+
+  }catch(error){
+    alert("Server error. Please try again later.");
+    console.error(error);
+  }
+}
+
+</script>
+
+
+</body>
+</html>

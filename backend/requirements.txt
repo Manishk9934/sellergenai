@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+python-jose
+bcrypt
+python-multipart
+razorpay

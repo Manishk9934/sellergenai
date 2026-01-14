@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upgrade to Pro – SellerGen AI</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body style="font-family:Arial;text-align:center;padding-top:80px;">
+
+<h2>Upgrade to Pro Plan</h2>
+<p>₹199 – Unlimited AI usage</p>
+
+<button onclick="startPayment()">Upgrade Now</button>
+
+
+<script>
+async function startPayment(){
+  const res = await fetch("/create-order",{method:"POST"});
+  const order = await res.json();
+
+  // Dummy success simulation
+  const fakeResponse = {
+    razorpay_order_id: order.id,
+    razorpay_payment_id: "pay_test_123",
+    razorpay_signature: "signature_test_123"
+  };
+
+  // Direct verify call
+  const verify = await fetch("/verify-payment", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      razorpay_order_id: fakeResponse.razorpay_order_id,
+      razorpay_payment_id: fakeResponse.razorpay_payment_id,
+      razorpay_signature: fakeResponse.razorpay_signature,
+      email: localStorage.getItem("user")
+    })
+  });
+
+  const result = await verify.json();
+
+  if(verify.ok){
+    alert("Payment Successful! Pro Activated");
+    localStorage.setItem("plan","pro");
+    window.location.href="/dashboard";
+  } else {
+    alert("Payment Failed");
+  }
+}
+</script>
+
+
+
+</body>
+</html>
