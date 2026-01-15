@@ -38,7 +38,7 @@ razorpay_client = razorpay.Client(
 )
 
 # ================= JWT CONFIG =================
-SECRET_KEY = os.getenv("JWT_SECRET")
+SECRET_KEY = os.getenv("JWT_SECRET","SELLERGEN_AI_SECRET_2026")
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
