@@ -1,9 +1,9 @@
 fastapi
 uvicorn
+bcrypt
+python-jose
+python-multipart
+sqlite-utils
 google-generativeai
 python-dotenv
-python-jose
-bcrypt
-python-multipart
 razorpay
-

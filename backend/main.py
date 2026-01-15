@@ -16,6 +16,9 @@ from pydantic import BaseModel
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from fastapi.responses import FileResponse
+from backend.db import init_db
+
+init_db()
 
 
 SMTP_SERVER = "smtp.gmail.com"
