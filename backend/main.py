@@ -8,14 +8,15 @@ from fastapi import FastAPI, Request, HTTPException, Depends, Header
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
-from ai import generate_listing, generate_keywords
-from db import get_connection
+from backend.ai import generate_listing, generate_keywords
+from backend.db import get_connection
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
 from pydantic import BaseModel
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from fastapi.responses import FileResponse
+
 
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
